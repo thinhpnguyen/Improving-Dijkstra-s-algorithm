@@ -43,5 +43,6 @@ class graph:
         for i in list:
             i.distance = sys.maxsize
             i.previous = None
+            i.visited = False
 
 

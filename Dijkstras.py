@@ -13,19 +13,23 @@ def shortest(v, path):
 def dijkstra (G, start, target):
     G.re_initialize()  # reset all vertices' distance to infinity and delete all path
     start.set_distance(0)
-    #add the source to the queue first
     unvisited_queue = []
-    unvisited_queue.append([start.get_distance(), start])
+    unvisited_queue.append([start.get_distance(), start]) # add the source to the queue first
     while len(unvisited_queue):
-        uv = heapq.heappop(unvisited_queue)  # get the one with least shortest distance to source
+        uv = heapq.heappop(unvisited_queue) # get the one with least shortest distance to source
+
+        if not uv[1].visited:
+            uv[1].visited = True
+
         if uv is target:
             break  # first improvement: break when the target is found
-        current = uv[1] # set to the node of the current vertex
+        current = uv[1]  # set to the node of the current vertex
 
         for next in current.adjacent:
-            unvisited_queue.append([next.get_distance(), next])  # add the adjacent to queue
-
-            new_dist = current.get_distance() + current.get_weight(next) # will improve here
+            if not next.visited or not next.added:  # only add the vertices that not already on the queue or not popped from queue
+                unvisited_queue.append([next.get_distance(), next])  # add the adjacent to queue
+                next.added = True
+            new_dist = current.get_distance() + current.get_weight(next)  # will improve here
 
             if new_dist < next.get_distance():  # update distance when smaller path is available
                 next.set_distance(new_dist)
