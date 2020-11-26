@@ -10,8 +10,9 @@ class Vertex:
         self.visited = False
         # Predecessor
         self.previous = None
-    def __gt__(self,b):
+    def __gt__(self,b): # has to overload greater than operator for heapd
         return self.distance > b.distance
+
     def add_neighbor(self, neighbor, weight=0):
         self.adjacent[neighbor] = weight
 

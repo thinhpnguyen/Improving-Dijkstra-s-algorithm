@@ -10,7 +10,7 @@ def shortest(v, path):
 def dijkstra (G, start, target):
     start.set_distance(0)
 
-    # put pair of distance, vertex pointer to queue
+    # put pair of [distance, vertex pointer] to queue
     unvisited_queue = [(v.get_distance(), v) for v in G]
 
     heapq.heapify(unvisited_queue)
