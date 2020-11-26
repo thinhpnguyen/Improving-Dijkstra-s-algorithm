@@ -1,4 +1,5 @@
-import vertec
+from ver import Vertex
+
 class graph:
     def __init__(self):
         self.vert_dict = {} #vertex dictionary
