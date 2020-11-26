@@ -26,7 +26,7 @@ class graph:
             self.add_vertex(to)
 
         self.vert_dict[frm].add_neighbor(self.vert_dict[to], cost)
-        self.vert_dict[to].add_neighbor(self.vert_dict[frm], cost)
+        #self.vert_dict[to].add_neighbor(self.vert_dict[frm], cost)
 
     def get_vertices (self) :
         return self.vert_dict.keys()
