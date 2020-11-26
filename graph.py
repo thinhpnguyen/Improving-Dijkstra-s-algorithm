@@ -38,11 +38,5 @@ class graph:
     def get_previous(self, current):
         return self.previous
 
-    def re_initialize(self):
-        list = self.vert_dict.values()
-        for i in list:
-            i.distance = sys.maxsize
-            i.previous = None
-            i.visited = False
 
 
