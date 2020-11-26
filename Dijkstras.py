@@ -11,35 +11,34 @@ def shortest(v, path):
 
 
 def dijkstra (G, start, target):
+    G.re_initialize()  # reset all vertices' distance to infinity and delete all path
     start.set_distance(0)
-
-    # put pair of [distance, vertex pointer] to queue
-    unvisited_queue = [(v.get_distance(), v) for v in G]
-
-    heapq.heapify(unvisited_queue)
-
+    #add the source to the queue first
+    unvisited_queue = []
+    unvisited_queue.append([start.get_distance(), start])
     while len(unvisited_queue):
         uv = heapq.heappop(unvisited_queue)  # get the one with least shortest distance to source
         if uv is target:
-            break  # first improvement, break when the target is found
-        current = uv[1]
-        current.set_visited()
+            break  # first improvement: break when the target is found
+        current = uv[1] # set to the node of the current vertex
 
         for next in current.adjacent:
-            if next.visited:
-                continue
+            unvisited_queue.append([next.get_distance(), next])  # add the adjacent to queue
+
             new_dist = current.get_distance() + current.get_weight(next) # will improve here
 
-            if new_dist < next.get_distance():
+            if new_dist < next.get_distance():  # update distance when smaller path is available
                 next.set_distance(new_dist)
                 next.set_previous(current)
             else:
                 continue
+        # heapify the queue again
+        heapq.heapify(unvisited_queue)
 
-    while len(unvisited_queue):
-        heapq.heappop(unvisited_queue)
-    unvisited_queue  = [ (v.get_distrance(), v) for v in G if not v.visited]
-    heapq.heapify(unvisited_queue)
+    # print out the path
+    path = [target.get_id()]
+    shortest(target, path)
+    print('The shortest path : %s' %(path[::-1]))
 
 
 if __name__ == '__main__':
@@ -70,8 +69,4 @@ if __name__ == '__main__':
             print('( %s , %s, %3d)'  % ( vid, wid, v.get_weight(w)))
 
     dijkstra(g, g.get_vertex('a'), g.get_vertex('e'))
-
-    target = g.get_vertex('e')
-    path = [target.get_id()]
-    shortest(target, path)
-    print('The shortest path : %s' %(path[::-1]))
+    dijkstra(g, g.get_vertex('d'), g.get_vertex('f'))

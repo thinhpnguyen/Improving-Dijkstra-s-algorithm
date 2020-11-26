@@ -1,4 +1,5 @@
 from ver import Vertex
+import sys
 
 class graph:
     def __init__(self):
@@ -36,5 +37,11 @@ class graph:
 
     def get_previous(self, current):
         return self.previous
+
+    def re_initialize(self):
+        list = self.vert_dict.values()
+        for i in list:
+            i.distance = sys.maxsize
+            i.previous = None
 
 
