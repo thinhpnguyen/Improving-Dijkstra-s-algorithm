@@ -1,11 +1,14 @@
 import heapq
 from graph import graph
+
+
 def shortest(v, path):
     ''' make shortest path from v.previous'''
     if v.previous:
         path.append(v.previous.get_id())
         shortest(v.previous, path)
     return
+
 
 def dijkstra (G, start, target):
     start.set_distance(0)
@@ -16,26 +19,28 @@ def dijkstra (G, start, target):
     heapq.heapify(unvisited_queue)
 
     while len(unvisited_queue):
-        uv = heapq.heappop(unvisited_queue)
+        uv = heapq.heappop(unvisited_queue)  # get the one with least shortest distance to source
+        if uv is target:
+            break  # first improvement, break when the target is found
         current = uv[1]
         current.set_visited()
 
         for next in current.adjacent:
             if next.visited:
                 continue
-            new_dist = current.get_distance() + current.get_weight(next)
+            new_dist = current.get_distance() + current.get_weight(next) # will improve here
 
             if new_dist < next.get_distance():
                 next.set_distance(new_dist)
                 next.set_previous(current)
             else:
-                pass
-
+                continue
 
     while len(unvisited_queue):
         heapq.heappop(unvisited_queue)
     unvisited_queue  = [ (v.get_distrance(), v) for v in G if not v.visited]
     heapq.heapify(unvisited_queue)
+
 
 if __name__ == '__main__':
 

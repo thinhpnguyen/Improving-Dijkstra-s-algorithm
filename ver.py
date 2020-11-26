@@ -10,11 +10,12 @@ class Vertex:
         self.visited = False
         # Predecessor
         self.previous = None
-    def __gt__(self,b): # has to overload greater than operator for heapd
+
+    def __gt__(self, b):  # has to overload greater than operator for heapd
         return self.distance > b.distance
 
     def add_neighbor(self, neighbor, weight=0):
-        self.adjacent[neighbor] = weight
+        self.adjacent[neighbor] = weight   # key is the vertex name
 
     def get_connections(self):
         return self.adjacent.keys()
