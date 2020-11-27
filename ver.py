@@ -1,7 +1,7 @@
 import sys
 
 class Vertex:
-    def __init__(self, node):
+    def __init__(self, node, long, lat):
         self.id = node
         self.adjacent = {}
         # Set distance to infinity for all nodes
@@ -10,6 +10,8 @@ class Vertex:
         self.visited = False
         # Predecessor
         self.previous = None
+        self.x = int(long)
+        self.y = int(lat)
 
     def __gt__(self, b):  # has to overload greater than operator for heapd
         return self.distance > b.distance

@@ -60,29 +60,49 @@ if __name__ == '__main__':
 
     g = graph()
 
-    g.add_vertex('a')
-    g.add_vertex('b')
-    g.add_vertex('c')
-    g.add_vertex('d')
-    g.add_vertex('e')
-    g.add_vertex('f')
+    # g.add_vertex('a')
+    # g.add_vertex('b')
+    # g.add_vertex('c')
+    # g.add_vertex('d')
+    # g.add_vertex('e')
+    # g.add_vertex('f')
+    #
+    # g.add_edge('a', 'b', 7)
+    # g.add_edge('a', 'c', 9)
+    # g.add_edge('a', 'f', 14)
+    # g.add_edge('b', 'c', 10)
+    # g.add_edge('b', 'd', 15)
+    # g.add_edge('c', 'd', 11)
+    # g.add_edge('c', 'f', 2)
+    # g.add_edge('d', 'e', 6)
+    # g.add_edge('e', 'f', 9)
 
-    g.add_edge('a', 'b', 7)
-    g.add_edge('a', 'c', 9)
-    g.add_edge('a', 'f', 14)
-    g.add_edge('b', 'c', 10)
-    g.add_edge('b', 'd', 15)
-    g.add_edge('c', 'd', 11)
-    g.add_edge('c', 'f', 2)
-    g.add_edge('d', 'e', 6)
-    g.add_edge('e', 'f', 9)
+    with open('usa.txt', 'r') as file:
+        # reading each line
+        count = 0
+        for line in file:
+            if count == 0:
+                # reading # of vertices and # of edges
+                num_vertices, num_edges = line.split()
+                g.num_vertices = int(num_vertices)
+                g.num_edges = int(num_edges)
+                count += 1
+                continue
+            if count > 0 and count < (g.num_vertices + 1):
+                name, x, y = line.split()
+                g.add_vertex(name, x, y)
+                count += 1
+                continue
+            if count > g.num_vertices:
+                name1, name2 = line.split()
+                name3 = name2.rstrip('\n')
+                g.add_edge(name1, name3)
+                count += 1
+                continue
+    # for v in g:
+    #     for w in v.get_connections():
+    #         vid = v.get_id()
+    #         wid = w.get_id()
+    #         print('( %s , %s, %3d)'  % ( vid, wid, v.get_weight(w)))
 
-    for v in g:
-        for w in v.get_connections():
-            vid = v.get_id()
-            wid = w.get_id()
-            print('( %s , %s, %3d)'  % ( vid, wid, v.get_weight(w)))
-
-    dijkstra(g, g.get_vertex('a'), g.get_vertex('e'))
-    dijkstra(g, g.get_vertex('d'), g.get_vertex('f'))
-    dijkstra(g, g.get_vertex('e'), g.get_vertex('c'))
+    dijkstra(g, g.get_vertex('531'), g.get_vertex('681'))
