@@ -25,15 +25,16 @@ def dijkstra (G, start, target):
         uv = heapq.heappop(unvisited_queue) # get the one with least shortest distance to source
         if not uv[1].visited:
             uv[1].visited = True
+            visited_list.append(uv[1])
 
         if uv is target:
             break  # IMPROVEMENT #1: break when the target is found
         current = uv[1]  # set to the node of the current vertex
 
         for next in current.adjacent:
-            if not next.visited or not next.added:  # only add the vertices that not already on the queue or not popped from queue
+            if not next.visited:  # only add the vertices that not already on the queue or not popped from queue
                 unvisited_queue.append([next.get_distance(), next])  # add the adjacent to queue
-                next.added = True
+                next.visited = True
                 visited_list.append(next)
 
             new_dist = current.get_distance() + current.get_weight(next)  # will improve here
@@ -46,9 +47,12 @@ def dijkstra (G, start, target):
         heapq.heapify(unvisited_queue)
 
     # print out the path
-    path = [target.get_id()]
-    shortest(target, path)
-    print('The shortest path : %s' %(path[::-1]))
+    if target.distance is sys.maxsize: # if distance of target is infinity => not connected to source
+        print("No Path!\n")
+    else:
+        path = [target.get_id()] # path is a list
+        shortest(target, path)
+        print('The shortest path : %s' %(path[::-1]))
     re_initialize(visited_list)  # IMPROVEMENT #2: only reinitialize the vertices that changed
 
 
@@ -81,3 +85,4 @@ if __name__ == '__main__':
 
     dijkstra(g, g.get_vertex('a'), g.get_vertex('e'))
     dijkstra(g, g.get_vertex('d'), g.get_vertex('f'))
+    dijkstra(g, g.get_vertex('e'), g.get_vertex('c'))

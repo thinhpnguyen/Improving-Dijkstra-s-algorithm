@@ -10,7 +10,6 @@ class Vertex:
         self.visited = False
         # Predecessor
         self.previous = None
-        self.added = False
 
     def __gt__(self, b):  # has to overload greater than operator for heapd
         return self.distance > b.distance
