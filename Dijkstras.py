@@ -1,7 +1,7 @@
 import heapq
 from graph import graph
 import sys
-
+import math
 def shortest(v, path):
     ''' make shortest path from v.previous'''
     if v.previous:
@@ -14,6 +14,9 @@ def re_initialize(list):
         i.distance = sys.maxsize
         i.previous = None
         i.visited = False
+def dis_two_p(one, two):
+    return math.sqrt((one.x - two.x)**2 + (one.y - two.y)**2) # distance of two points in 2D
+
 
 def dijkstra (G, start, target):
     # G.re_initialize()  # reset all vertices' distance to infinity and delete all path
@@ -37,7 +40,7 @@ def dijkstra (G, start, target):
                 next.visited = True
                 visited_list.append(next)
 
-            new_dist = current.get_distance() + current.get_weight(next)  # will improve here
+            new_dist = current.get_distance() + current.get_weight(next) + (dis_two_p(next, target) - dis_two_p(current, target))  # also add in Euclidean distance to make it goes to the distance of the sink
             if new_dist < next.get_distance():  # update distance when smaller path is available
                 next.set_distance(new_dist)
                 next.set_previous(current)
@@ -48,7 +51,7 @@ def dijkstra (G, start, target):
 
     # print out the path
     if target.distance is sys.maxsize: # if distance of target is infinity => not connected to source
-        print("No Path!\n")
+        print("No Path!")
     else:
         path = [target.get_id()] # path is a list
         shortest(target, path)
@@ -103,6 +106,11 @@ if __name__ == '__main__':
     #     for w in v.get_connections():
     #         vid = v.get_id()
     #         wid = w.get_id()
-    #         print('( %s , %s, %3d)'  % ( vid, wid, v.get_weight(w)))
+    #         print('( %s , %s, %s)'  % ( vid, wid, v.get_weight(w)))
 
-    dijkstra(g, g.get_vertex('531'), g.get_vertex('681'))
+
+    dijkstra(g, g.get_vertex('0'), g.get_vertex('1001'))
+    dijkstra(g, g.get_vertex('2'), g.get_vertex('1002'))
+    dijkstra(g, g.get_vertex('68'), g.get_vertex('785'))
+    dijkstra(g, g.get_vertex('4010'), g.get_vertex('2854'))
+    dijkstra(g, g.get_vertex('0'), g.get_vertex('2000'))

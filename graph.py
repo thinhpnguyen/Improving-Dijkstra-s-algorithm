@@ -29,7 +29,7 @@ class graph:
 
         ver1 = self.get_vertex(frm)
         ver2 = self.get_vertex(to)
-        cost = math.sqrt((ver1.x - ver2.x)**2 + (ver1.y - ver2.y)**2)
+        cost = math.sqrt((ver1.x - ver2.x)**2 + (ver1.y - ver2.y)**2) # distance of two points in 2D
         self.vert_dict[frm].add_neighbor(self.vert_dict[to], cost)
 
     def get_vertices (self) :

@@ -10,14 +10,14 @@ class Vertex:
         self.visited = False
         # Predecessor
         self.previous = None
-        self.x = int(long)
-        self.y = int(lat)
+        self.x = float(long)
+        self.y = float(lat)
 
     def __gt__(self, b):  # has to overload greater than operator for heapd
         return self.distance > b.distance
 
-    def add_neighbor(self, neighbor, weight=0):
-        self.adjacent[neighbor] = weight   # key is the vertex name
+    def add_neighbor(self, neighbor, weight=0.0):
+        self.adjacent[neighbor] = float(weight)   # key is the vertex name
 
     def get_connections(self):
         return self.adjacent.keys()
@@ -26,7 +26,7 @@ class Vertex:
         return self.id
 
     def get_weight(self, neighbor):
-        return self.adjacent[neighbor]
+        return float(self.adjacent[neighbor])
 
     def set_distance(self, dist):
         self.distance = dist
