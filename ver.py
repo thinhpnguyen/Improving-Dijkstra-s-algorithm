@@ -12,6 +12,7 @@ class Vertex:
         self.previous = None
         self.x = float(long)
         self.y = float(lat)
+        self.dtd = sys.maxsize
 
     def __gt__(self, b):  # has to overload greater than operator for heapd
         return self.distance > b.distance

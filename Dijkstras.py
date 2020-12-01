@@ -18,6 +18,7 @@ def re_initialize(list):
         i.distance = sys.maxsize
         i.previous = None
         i.visited = False
+        i.dtod = sys.maxsize
 def dist(one, two):
     return math.sqrt((one.x - two.x)**2 + (one.y - two.y)**2) # distance of two points in 2D
 
@@ -28,39 +29,41 @@ def dijkstra (G, start, target):
     unvisited_queue = []
     visited_list = [] # keep track of all vertices that changed
     unvisited_queue.append([start.get_distance(), start]) # add the source to the queue first
+    start.visited = True
+    visited_list.append(start)
     while len(unvisited_queue):
         uv = heapq.heappop(unvisited_queue) # get the one with least shortest distance to source
-        if not uv[1].visited:
-            uv[1].visited = True
-            visited_list.append(uv[1])
         if uv[1] is target:
             break  # IMPROVEMENT #1: break when the target is found
         current = uv[1]  # set to the node of the current vertex
-
+        curr_dist = dist(current, target)
         for next in current.adjacent:
             if not next.visited:  # only add the vertices that not already on the queue or not popped from queue
                 unvisited_queue.append([next.get_distance(), next])  # add the adjacent to queue
                 next.visited = True
                 visited_list.append(next)
-
-            new_dist = current.get_distance() + current.get_weight(next) + dist(next, target) - dist(current, target) # also add in Euclidean distance to make it goes to the distance of the sink
+                next.dtd = dist(next, target)
+            new_dist = current.get_distance() + current.get_weight(next) + next.dtd + curr_dist  # also add in Euclidean distance to make it goes to the distance of the sink
             if new_dist < next.get_distance():  # update distance when smaller path is available
                 next.set_distance(new_dist)
                 next.set_previous(current)
+                # print('updated : current = %s next = %s new_dist = %s' \  #print out process
+                # % (current.get_id(), next.get_id(), next.get_distance()))
             else:
                 continue
-        # heapify the queue again
-        heapq.heapify(unvisited_queue)
+                # print('not updated : current = %s next = %s new_dist = %s' \
+                # % (current.get_id(), next.get_id(), next.get_distance()))
+        heapq.heapify(unvisited_queue) # heapify the queue again
 
     # print out the path
-    # if target.distance is sys.maxsize: # if distance of target is infinity => not connected to source
-    #     print("No Path!")
-    # else:
-    #     path = [target.get_id()] # path is a list
-    #     shortest(target, path)
-    #     print('The shortest path : %s' %(path[::-1]))
+    if target.distance is sys.maxsize: # if distance of target is infinity => not connected to source
+         print("No Path!")
+    else:
+         path = [target.get_id()] # path is a list
+         shortest(target, path)
+         print('The shortest path : %s' %(path[::-1]))
     re_initialize(visited_list)  # IMPROVEMENT #2: only reinitialize the vertices that changed
-    print("Done!")
+    #print("Done!")
 
 def test():
     size = 8000
@@ -121,17 +124,18 @@ if __name__ == '__main__':
     #         wid = w.get_id()
     #         print('( %s , %s, %s)'  % ( vid, wid, v.get_weight(w)))
 
+    # test sigal querry
+    # t1=time.time()
+    dijkstra(g, g.get_vertex('0'), g.get_vertex('100'))
+    # t2=time.time()
+    # print("The time is: ")
+    # print(t2 - t1)
 
-    # dijkstra(g, g.get_vertex('0'), g.get_vertex('1001'))
-    # dijkstra(g, g.get_vertex('2'), g.get_vertex('1002'))
-    # dijkstra(g, g.get_vertex('68'), g.get_vertex('785'))
-    # dijkstra(g, g.get_vertex('4010'), g.get_vertex('2854'))
-    # dijkstra(g, g.get_vertex('0'), g.get_vertex('2000'))
-
-    total = 0
-    times = 20
-    for i in range(times):
-        total += test()
-    print("Average is: ")
-    print(total/times)
+    # test average
+    # total = 0
+    # times = 10
+    # for i in range(times):
+    #     total += test()
+    # print("Average is: ")
+    # print(total/times)
 
