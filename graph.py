@@ -32,7 +32,7 @@ class graph:
         cost = math.sqrt((ver1.x - ver2.x)**2 + (ver1.y - ver2.y)**2) # distance of two points in 2D
         self.vert_dict[frm].add_neighbor(self.vert_dict[to], cost)
 
-    def get_vertices (self) :
+    def get_vertices(self):
         return self.vert_dict.keys()
 
     def set_previous(self, current):
