@@ -26,6 +26,7 @@ def dist(one, two):
 def dijkstra (G, start, target):
     # G.re_initialize()  # reset all vertices' distance to infinity and delete all path
     start.set_distance(dist(start, target)) # set to the distance of source to sink to not get negative when calculating distances if adjacents
+    start.set_dtd(dist(start, target))
     unvisited_queue = []
     visited_list = [] # keep track of all vertices that changed
     unvisited_queue.append([start.get_distance(), start]) # add the source to the queue first
@@ -36,14 +37,13 @@ def dijkstra (G, start, target):
         if uv[1] is target:
             break  # IMPROVEMENT #1: break when the target is found
         current = uv[1]  # set to the node of the current vertex
-        curr_dist = dist(current, target)
         for next in current.adjacent:
             if not next.visited:  # only add the vertices that not already on the queue or not popped from queue
                 unvisited_queue.append([next.get_distance(), next])  # add the adjacent to queue
                 next.visited = True
                 visited_list.append(next)
-                next.dtd = dist(next, target)
-            new_dist = current.get_distance() + current.get_weight(next) + next.dtd + curr_dist  # also add in Euclidean distance to make it goes to the distance of the sink
+                next.set_dtd(dist(next, target)) # only calculate dtd for the add vertices
+            new_dist = current.get_distance() + current.get_weight(next) + next.get_dtd() + current.get_dtd()  # also add in Euclidean distance to make it goes to the distance of the sink
             if new_dist < next.get_distance():  # update distance when smaller path is available
                 next.set_distance(new_dist)
                 next.set_previous(current)

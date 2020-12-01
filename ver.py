@@ -12,7 +12,7 @@ class Vertex:
         self.previous = None
         self.x = float(long)
         self.y = float(lat)
-        self.dtd = sys.maxsize
+        self.dtd = sys.maxsize # distance to sink
 
     def __gt__(self, b):  # has to overload greater than operator for heapd
         return self.distance > b.distance
@@ -35,11 +35,17 @@ class Vertex:
     def get_distance(self):
         return self.distance
 
+    def get_dtd(self):
+        return self.dtd
+
     def set_previous(self, prev):
         self.previous = prev
 
     def set_visited(self):
         self.visited = True
+
+    def set_dtd(self, dis):
+        self.dtd = dis
 
     def __str__(self):
         return str(self.id) + ' adjacent: ' + str([x.id for x in self.adjacent])
