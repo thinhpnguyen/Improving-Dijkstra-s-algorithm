@@ -5,7 +5,7 @@ import math
 from ver import *
 import sys
 import contextlib
-from io import StringIO
+from io import *
 
 def captured_output():
     new_out, new_err = StringIO(), StringIO()
@@ -135,6 +135,7 @@ class MyTestCase(unittest.TestCase):
             dijkstra(g, g.get_vertex('b'), g.get_vertex('f'))
         output = temp_stdout.getvalue().strip()
         self.assertEqual(output, "The shortest path : ['b', 'c', 'e', 'f']")
+
 
 if __name__ == '__main__':
     unittest.main()

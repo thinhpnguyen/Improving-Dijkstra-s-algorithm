@@ -4,13 +4,14 @@ import sys
 import math
 import time
 import random
+import io
 
 
 def shortest(v, path):
     ''' make shortest path from v.previous'''
-    if v.previous:
+    while v.previous is not None:
         path.append(v.previous.get_id())
-        shortest(v.previous, path)
+        v = v.previous
     return
 
 def re_initialize(list):
@@ -52,24 +53,28 @@ def dijkstra (G, start, target):
         # heapify the queue again
         heapq.heapify(unvisited_queue)
 
-    # print out the path
-    # if target.distance is sys.maxsize: # if distance of target is infinity => not connected to source
-    #     print("No Path!")
-    # else:
-    #     path = [target.get_id()] # path is a list
-    #     shortest(target, path)
-    #     print('The shortest path : %s' %(path[::-1]))
-    re_initialize(visited_list)  # IMPROVEMENT #2: only reinitialize the vertices that changed
-    print("Done!")
 
-def test():
+    if target.distance is sys.maxsize: # if distance of target is infinity => not connected to source
+        print("No Path!")
+    else:
+        path = [target.get_id()] # path is a list
+        shortest(target, path)
+        print('The shortest path : %s' %(path[::-1]))
+        del path
+    re_initialize(visited_list)  # IMPROVEMENT #2: only reinitialize the vertices that changed
+    #print("Done!")
+
+def sample_test():
     size = 8000
     t0 = time.time()
+    suppress_text = io.StringIO()
+    sys.stdout = suppress_text
     for i in range(10):
         r1 = random.randint(0, size)
         r2 = random.randint(0, size)
         dijkstra(g, g.get_vertex(str(r1)), g.get_vertex(str(r2)))
     t1 = time.time()
+    sys.stdout = sys.__stdout__
     return t1 - t0
 
 if __name__ == '__main__':
@@ -121,17 +126,20 @@ if __name__ == '__main__':
     #         wid = w.get_id()
     #         print('( %s , %s, %s)'  % ( vid, wid, v.get_weight(w)))
 
-
+    # t0 = time.time()
     # dijkstra(g, g.get_vertex('0'), g.get_vertex('1001'))
+    #
     # dijkstra(g, g.get_vertex('2'), g.get_vertex('1002'))
     # dijkstra(g, g.get_vertex('68'), g.get_vertex('785'))
     # dijkstra(g, g.get_vertex('4010'), g.get_vertex('2854'))
     # dijkstra(g, g.get_vertex('0'), g.get_vertex('2000'))
-
+    # t1 = time.time()
+    # print(t1 - t0)
+    print("Time test start.")
     total = 0
     times = 20
     for i in range(times):
-        total += test()
+        total += sample_test()
     print("Average is: ")
     print(total/times)
 
