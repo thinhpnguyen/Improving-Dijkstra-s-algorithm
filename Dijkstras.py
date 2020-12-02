@@ -4,13 +4,14 @@ import sys
 import math
 import time
 import random
+import io
 
 
 def shortest(v, path):
     ''' make shortest path from v.previous'''
-    if v.previous:
+    while v.previous is not None:
         path.append(v.previous.get_id())
-        shortest(v.previous, path)
+        v = v.previous
     return
 
 def re_initialize(list):
@@ -18,7 +19,6 @@ def re_initialize(list):
         i.distance = sys.maxsize
         i.previous = None
         i.visited = False
-        i.dtod = sys.maxsize
 def dist(one, two):
     return math.sqrt((one.x - two.x)**2 + (one.y - two.y)**2) # distance of two points in 2D
 
@@ -26,53 +26,55 @@ def dist(one, two):
 def dijkstra (G, start, target):
     # G.re_initialize()  # reset all vertices' distance to infinity and delete all path
     start.set_distance(dist(start, target)) # set to the distance of source to sink to not get negative when calculating distances if adjacents
-    start.set_dtd(dist(start, target))
     unvisited_queue = []
     visited_list = [] # keep track of all vertices that changed
     unvisited_queue.append([start.get_distance(), start]) # add the source to the queue first
-    start.visited = True
-    visited_list.append(start)
     while len(unvisited_queue):
         uv = heapq.heappop(unvisited_queue) # get the one with least shortest distance to source
+        if not uv[1].visited:
+            uv[1].visited = True
+            visited_list.append(uv[1])
         if uv[1] is target:
             break  # IMPROVEMENT #1: break when the target is found
         current = uv[1]  # set to the node of the current vertex
+
         for next in current.adjacent:
             if not next.visited:  # only add the vertices that not already on the queue or not popped from queue
                 unvisited_queue.append([next.get_distance(), next])  # add the adjacent to queue
                 next.visited = True
                 visited_list.append(next)
-                next.set_dtd(dist(next, target)) # only calculate dtd for the add vertices
-            new_dist = current.get_distance() + current.get_weight(next) + next.get_dtd() + current.get_dtd()  # also add in Euclidean distance to make it goes to the distance of the sink
+
+            new_dist = current.get_distance() + current.get_weight(next) + dist(next, target) - dist(current, target) # also add in Euclidean distance to make it goes to the distance of the sink
             if new_dist < next.get_distance():  # update distance when smaller path is available
                 next.set_distance(new_dist)
                 next.set_previous(current)
-                # print('updated : current = %s next = %s new_dist = %s' \  #print out process
-                # % (current.get_id(), next.get_id(), next.get_distance()))
             else:
                 continue
-                # print('not updated : current = %s next = %s new_dist = %s' \
-                # % (current.get_id(), next.get_id(), next.get_distance()))
-        heapq.heapify(unvisited_queue) # heapify the queue again
+        # heapify the queue again
+        heapq.heapify(unvisited_queue)
 
-    # print out the path
+
     if target.distance is sys.maxsize: # if distance of target is infinity => not connected to source
-         print("No Path!")
+        print("No Path!")
     else:
-         path = [target.get_id()] # path is a list
-         shortest(target, path)
-         print('The shortest path : %s' %(path[::-1]))
+        path = [target.get_id()] # path is a list
+        shortest(target, path)
+        print('The shortest path : %s' %(path[::-1]))
+        del path
     re_initialize(visited_list)  # IMPROVEMENT #2: only reinitialize the vertices that changed
     #print("Done!")
 
-def test():
+def sample_test():
     size = 8000
     t0 = time.time()
+    suppress_text = io.StringIO()
+    sys.stdout = suppress_text
     for i in range(10):
         r1 = random.randint(0, size)
         r2 = random.randint(0, size)
         dijkstra(g, g.get_vertex(str(r1)), g.get_vertex(str(r2)))
     t1 = time.time()
+    sys.stdout = sys.__stdout__
     return t1 - t0
 
 if __name__ == '__main__':
@@ -124,18 +126,20 @@ if __name__ == '__main__':
     #         wid = w.get_id()
     #         print('( %s , %s, %s)'  % ( vid, wid, v.get_weight(w)))
 
-    # test sigal querry
-    # t1=time.time()
-    dijkstra(g, g.get_vertex('0'), g.get_vertex('100'))
-    # t2=time.time()
-    # print("The time is: ")
-    # print(t2 - t1)
-
-    # test average
-    # total = 0
-    # times = 10
-    # for i in range(times):
-    #     total += test()
-    # print("Average is: ")
-    # print(total/times)
+    # t0 = time.time()
+    # dijkstra(g, g.get_vertex('0'), g.get_vertex('1001'))
+    #
+    # dijkstra(g, g.get_vertex('2'), g.get_vertex('1002'))
+    # dijkstra(g, g.get_vertex('68'), g.get_vertex('785'))
+    # dijkstra(g, g.get_vertex('4010'), g.get_vertex('2854'))
+    # dijkstra(g, g.get_vertex('0'), g.get_vertex('2000'))
+    # t1 = time.time()
+    # print(t1 - t0)
+    print("Time test start.")
+    total = 0
+    times = 20
+    for i in range(times):
+        total += sample_test()
+    print("Average is: ")
+    print(total/times)
 
