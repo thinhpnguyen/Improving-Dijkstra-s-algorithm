@@ -126,13 +126,13 @@ class MyTestCase(unittest.TestCase):
 
         temp_stdout = StringIO()
         with contextlib.redirect_stdout(temp_stdout):
-            dijkstra(g, g.get_vertex('a'), g.get_vertex('f'))
+            dijkstra(g.get_vertex('a'), g.get_vertex('f'))
         output = temp_stdout.getvalue().strip()
         self.assertEqual(output, "The shortest path : ['a', 'c', 'e', 'f']")
 
         temp_stdout = StringIO()
         with contextlib.redirect_stdout(temp_stdout):
-            dijkstra(g, g.get_vertex('b'), g.get_vertex('f'))
+            dijkstra(g.get_vertex('b'), g.get_vertex('f'))
         output = temp_stdout.getvalue().strip()
         self.assertEqual(output, "The shortest path : ['b', 'c', 'e', 'f']")
 
