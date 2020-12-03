@@ -66,8 +66,8 @@ def dijkstra (start, target):
 def sample_test(di):
     size = 87575
     t0 = time.time()
-    #suppress_text = io.StringIO()
-    #sys.stdout = suppress_text
+    suppress_text = io.StringIO()
+    sys.stdout = suppress_text
     print("Time test start.")
     test_size = 750
     for i in range(test_size):
@@ -75,7 +75,7 @@ def sample_test(di):
         r2 = random.randint(0, size - 1)
         di( g.get_vertex(str(r1)), g.get_vertex(str(r2)))
     t1 = time.time()
-    #sys.stdout = sys.__stdout__
+    sys.stdout = sys.__stdout__
     return (t1 - t0)/test_size
 
 if __name__ == '__main__':
