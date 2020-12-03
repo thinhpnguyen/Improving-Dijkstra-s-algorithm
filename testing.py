@@ -62,6 +62,8 @@ class MyTestCase(unittest.TestCase):
         self.assertFalse(g.get_vertex('f').visited)
         g.get_vertex('f').set_visited()
         self.assertTrue(g.get_vertex('f').visited)
+        
+        self.assertIsNone(g.get_vertex('t'))
 
     def test_vertex_connection(self):
         g = graph()
@@ -135,7 +137,12 @@ class MyTestCase(unittest.TestCase):
             dijkstra(g.get_vertex('b'), g.get_vertex('f'))
         output = temp_stdout.getvalue().strip()
         self.assertEqual(output, "The shortest path : ['b', 'c', 'e', 'f']")
-
+       
+        temp_stdout = StringIO()
+        with contextlib.redirect_stdout(temp_stdout):
+            dijkstra(g, g.get_vertex('f'), g.get_vertex('c'))
+        output = temp_stdout.getvalue().strip()
+        self.assertEqual(output, "No Path!")
 
 if __name__ == '__main__':
     unittest.main()
