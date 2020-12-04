@@ -73,7 +73,7 @@ def sample_test(di):
     for i in range(test_size):
         r1 = random.randint(0, size - 1)
         r2 = random.randint(0, size - 1)
-        di( g.get_vertex(str(r1)), g.get_vertex(str(r2)))
+        di(g.get_vertex(str(r1)), g.get_vertex(str(r2)))
     t1 = time.time()
     sys.stdout = sys.__stdout__
     return (t1 - t0)/test_size
@@ -128,7 +128,7 @@ if __name__ == '__main__':
     #         print('( %s , %s, %s)'  % ( vid, wid, v.get_weight(w)))
 
     # t0 = time.time()
-    #dijkstra(g, g.get_vertex('0'), g.get_vertex('105'))
+    dijkstra(g.get_vertex('0'), g.get_vertex('98'))
     # t1 = time.time()
     # print(t1 - t0)
     # print("Time test start.")
@@ -138,5 +138,5 @@ if __name__ == '__main__':
     #     total += sample_test(dijkstra)
     # print("Average is: ")
     # print(total/times)
-    avg = sample_test(dijkstra)
-    print(avg)
+    # avg = sample_test(dijkstra)
+    # print(avg)
