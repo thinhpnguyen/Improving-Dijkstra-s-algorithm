@@ -48,8 +48,10 @@ def dijkstra (start, target):
             if new_dist < next.get_distance():  # update distance when smaller path is available
                 next.set_distance(new_dist)
                 next.set_previous(current)
+                print('updated : current = %s next = %s new_dist = %s' % (current.get_id(), next.get_id(), next.get_distance()))
+
             else:
-                continue
+                print('not updated : current = %s next = %s new_dist = %s' % (current.get_id(), next.get_id(), next.get_distance()))
         # heapify the queue again
         heapq.heapify(unvisited_queue)
 
@@ -62,6 +64,40 @@ def dijkstra (start, target):
         print('The shortest path : %s' %(path[::-1]))
         del path
     re_initialize(visited_list)  # IMPROVEMENT #2: only reinitialize the vertices that changed
+def dijkstra_ori (G, start, target):
+    # G.re_initialize()  # reset all vertices' distance to infinity and delete all path
+    start.set_distance(0) # set to the distance of source to sink to not get negative when calculating distances if adjacents
+    unvisited_queue = []
+    unvisited_queue.append([start.get_distance(), start]) # add the source to the queue first
+    start.visited = True
+    while len(unvisited_queue):
+        uv = heapq.heappop(unvisited_queue) # get the one with least shortest distance to source
+        current = uv[1]  # set to the node of the current vertex
+
+        for next in current.adjacent:
+            if not next.visited:  # only add the vertices that not already on the queue or not popped from queue
+                unvisited_queue.append([next.get_distance(), next])  # add the adjacent to queue
+                next.visited = True
+
+            new_dist = current.get_distance() + current.get_weight(next)# also add in Euclidean distance to make it goes to the distance of the sink
+            if new_dist < next.get_distance():  # update distance when smaller path is available
+                next.set_distance(new_dist)
+                next.set_previous(current)
+                print('updated : current = %s next = %s new_dist = %s' % (
+                current.get_id(), next.get_id(), next.get_distance()))
+            else:
+                print('not updated : current = %s next = %s new_dist = %s' % (current.get_id(), next.get_id(), next.get_distance()))
+        # heapify the queue again
+        heapq.heapify(unvisited_queue)
+    if target.distance is sys.maxsize: # if distance of target is infinity => not connected to source
+        print("No Path!")
+    else:
+        path = [target.get_id()] # path is a list
+        shortest(target, path)
+        print('The shortest path : %s' %(path[::-1]))
+        del path
+    re_initialize(G)  # IMPROVEMENT #2: only reinitialize the vertices that changed
+    #print("Done!")
 
 def sample_test(di):
     size = 87575
@@ -99,7 +135,7 @@ if __name__ == '__main__':
     # g.add_edge('d', 'e', 6)
     # g.add_edge('e', 'f', 9)
 
-    with open('usa.txt', 'r') as file:
+    with open('input6.txt', 'r') as file:
         # reading each line
         count = 0
         for line in file:
@@ -128,7 +164,7 @@ if __name__ == '__main__':
     #         print('( %s , %s, %s)'  % ( vid, wid, v.get_weight(w)))
 
     # t0 = time.time()
-    dijkstra(g.get_vertex('0'), g.get_vertex('98'))
+    #dijkstra(g.get_vertex('0'), g.get_vertex('6'))
     # t1 = time.time()
     # print(t1 - t0)
     # print("Time test start.")
@@ -140,3 +176,6 @@ if __name__ == '__main__':
     # print(total/times)
     # avg = sample_test(dijkstra)
     # print(avg)
+    dijkstra(g.get_vertex('0'), g.get_vertex('5'))
+    print("\n")
+    dijkstra_ori(g, g.get_vertex('0'), g.get_vertex('5'))
