@@ -108,7 +108,7 @@ class MyTestCase(unittest.TestCase):
     # 3||   ||   ||   ||   ||   ||   ||   ||   ||   ||    ||
     # 4||   ||   ||   || c ||   ||   || e ||   ||   ||    ||
 
-    def test_sorted_path(self):
+    def test_shortest_path(self):
         g = graph()
         g.add_vertex('a', 2, 2)
         g.add_vertex('b', 4, 1)
