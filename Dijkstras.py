@@ -23,7 +23,7 @@ def dist(one, two):
     return math.sqrt((one.x - two.x)**2 + (one.y - two.y)**2) # distance of two points in 2D
 
 
-def dijkstra (start, target):
+def dijkstra (start, target): #improved algorithm
     # G.re_initialize()  # reset all vertices' distance to infinity and delete all path
     start.dtd = dist(start, target)
     start.set_distance(start.get_dtd()) # set to the distance of source to its dtd
@@ -64,7 +64,7 @@ def dijkstra (start, target):
         print('The shortest path : %s' %(path[::-1]))
         del path
     re_initialize(visited_list)  # IMPROVEMENT #2: only reinitialize the vertices that changed
-def dijkstra_ori (G, start, target):
+def dijkstra_ori (G, start, target): # original algorithm
     # G.re_initialize()  # reset all vertices' distance to infinity and delete all path
     start.set_distance(0) # set to the distance of source to sink to not get negative when calculating distances if adjacents
     unvisited_queue = []
